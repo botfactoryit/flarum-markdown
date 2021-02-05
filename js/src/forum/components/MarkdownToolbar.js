@@ -6,9 +6,12 @@ export default class MarkdownToolbar extends Component {
   oncreate(vnode) {
     super.oncreate(vnode);
 
-    const field = document.getElementById(this.attrs.for);
+    // We need to give enough time for the editor driver to instantiate.
+    setTimeout(() => {
+      const field = document.getElementById(this.attrs.for);
 
-    field.addEventListener('keydown', this.shortcut.bind(this));
+      field.addEventListener('keydown', this.shortcut.bind(this));
+    }, 25);
   }
 
   view(vnode) {

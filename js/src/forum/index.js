@@ -7,8 +7,9 @@
  * https://github.com/github/markdown-toolbar-element/blob/master/LICENSE
  */
 
-import { extend } from 'flarum/extend';
+import { extend, override } from 'flarum/extend';
 import TextEditor from 'flarum/components/TextEditor';
+import BasicEditorDriver from 'flarum/editors/BasicEditorDriver';
 import MarkdownArea from 'mdarea';
 
 import MarkdownToolbar from './components/MarkdownToolbar';
@@ -21,12 +22,13 @@ app.initializers.add('flarum-markdown', function(app) {
     this.textareaId = 'textarea'+(index++);
   });
 
-  extend(TextEditor.prototype, 'view', function(vdom) {
-    vdom.children[0].attrs.id = this.textareaId;
+  extend(TextEditor.prototype, 'buildEditorParams', function(params) {
+    params.textareaId = this.textareaId;
   });
 
-  extend(TextEditor.prototype, 'oncreate', function() {
-    this.editor = new MarkdownArea(this.$('textarea')[0], {
+  extend(BasicEditorDriver.prototype, 'build', function (_, dom, params) {
+    this.el.id = params.textareaId;
+    this.mdarea = new MarkdownArea(this.el, {
       keyMap: {
         indent: ['Ctrl+m'],
         outdent: ['Ctrl+M'],
@@ -35,8 +37,9 @@ app.initializers.add('flarum-markdown', function(app) {
     });
   });
 
-  extend(TextEditor.prototype, 'onremove', function () {
-    this.editor.destroy();
+  override(BasicEditorDriver.prototype, 'destroy', function (original) {
+    this.mdarea.destroy();
+    original();
   });
 
   extend(TextEditor.prototype, 'toolbarItems', function(items) {
