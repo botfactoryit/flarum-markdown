@@ -9,7 +9,7 @@
 
 import { extend, override } from 'flarum/extend';
 import TextEditor from 'flarum/components/TextEditor';
-import BasicEditorDriver from 'flarum/editors/BasicEditorDriver';
+import BasicEditorDriver from 'flarum/utils/BasicEditorDriver';
 import MarkdownArea from 'mdarea';
 
 import MarkdownToolbar from './components/MarkdownToolbar';
